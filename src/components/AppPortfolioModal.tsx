@@ -17,7 +17,7 @@ import { newId } from '../utils/ids';
 interface AppPortfolioModalProps {
   app: AppProject;
   canEdit: boolean;
-  initialTab?: 'overview' | 'specs' | 'backlog' | 'settings';
+  initialTab?: string;
   onClose: () => void;
   onUpdateApp: (updatedApp: AppProject) => void;
   onDeleteApp: (appId: string) => void;
@@ -142,7 +142,7 @@ function SpecDocRenderer({ content }: { content: string }) {
         <h1
           key={index}
           style={{
-            fontSize: '1.4rem',
+            fontSize: '1.35rem',
             fontWeight: 700,
             color: '#60a5fa',
             borderBottom: '2px solid rgba(99, 102, 241, 0.3)',
@@ -164,7 +164,7 @@ function SpecDocRenderer({ content }: { content: string }) {
         <h2
           key={index}
           style={{
-            fontSize: '1.15rem',
+            fontSize: '1.1rem',
             fontWeight: 700,
             color: '#38bdf8',
             background: 'rgba(56, 189, 248, 0.08)',
@@ -187,7 +187,7 @@ function SpecDocRenderer({ content }: { content: string }) {
         <h3
           key={index}
           style={{
-            fontSize: '1rem',
+            fontSize: '0.98rem',
             fontWeight: 600,
             color: '#a7f3d0',
             marginTop: '1rem',
@@ -252,13 +252,16 @@ function SpecDocRenderer({ content }: { content: string }) {
 export function AppPortfolioModal({
   app,
   canEdit,
-  initialTab = 'overview',
+  initialTab = 'details',
   onClose,
   onUpdateApp,
   onDeleteApp,
   onBacklogChange,
 }: AppPortfolioModalProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'specs' | 'backlog' | 'settings'>(initialTab);
+  // Merge overview, specs, backlog into 'details' tab
+  const [activeTab, setActiveTab] = useState<'details' | 'settings'>(
+    initialTab === 'settings' ? 'settings' : 'details'
+  );
   const [specLang, setSpecLang] = useState<'vi' | 'en'>('vi');
   const [isCheckingHealth, setIsCheckingHealth] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -410,7 +413,7 @@ export function AppPortfolioModal({
     }
   };
 
-  // Save Settings Form (Fixed Supabase payload mapping)
+  // Save Settings Form
   const handleSaveForm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canEdit || !formData.title?.trim()) return;
@@ -501,18 +504,30 @@ export function AppPortfolioModal({
 
               <div className="portfolio-meta-tags">
                 <span className="portfolio-category-badge">🏷️ {app.category || 'Web App'}</span>
-                <span className="portfolio-category-badge" style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#a5b4fc', border: '1px solid rgba(99, 102, 241, 0.3)' }}>
+                <span
+                  className="portfolio-category-badge"
+                  style={{
+                    background: 'rgba(99, 102, 241, 0.15)',
+                    color: '#a5b4fc',
+                    border: '1px solid rgba(99, 102, 241, 0.3)',
+                  }}
+                >
                   👤 {app.author || 'johnnyhoang'}
                 </span>
                 {app.hosting && (
-                  <span className="portfolio-category-badge" style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                  <span
+                    className="portfolio-category-badge"
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.15)',
+                      color: '#38bdf8',
+                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                    }}
+                  >
                     ☁️ {app.hosting}
                   </span>
                 )}
                 {app.database && (
-                  <span className="portfolio-db-badge">
-                    🗄️ {app.database}
-                  </span>
+                  <span className="portfolio-db-badge">🗄️ {app.database}</span>
                 )}
                 <div
                   className="portfolio-health-tag"
@@ -530,7 +545,10 @@ export function AppPortfolioModal({
                   </span>
                 </div>
                 {app.manualChecked && (
-                  <span className="portfolio-verified-badge" title={`Check tay lúc: ${app.manualCheckedAt || 'N/A'}`}>
+                  <span
+                    className="portfolio-verified-badge"
+                    title={`Check tay lúc: ${app.manualCheckedAt || 'N/A'}`}
+                  >
                     ✓ Đã xác minh {app.manualCheckedAt ? `(${app.manualCheckedAt})` : ''}
                   </span>
                 )}
@@ -563,7 +581,7 @@ export function AppPortfolioModal({
 
             {canEdit && (
               <button
-                className={`btn ${app.manualChecked ? 'btn-secondary' : 'btn-secondary'} portfolio-btn-verify`}
+                className="btn btn-secondary portfolio-btn-verify"
                 onClick={handleToggleManualCheck}
                 title="Xác nhận bạn đã kiểm tra ứng dụng"
               >
@@ -588,35 +606,22 @@ export function AppPortfolioModal({
           </div>
         </div>
 
-        {/* Navigation Tabs */}
+        {/* Simplified Navigation Bar: 2 Tabs (Merged Details & Admin Settings) */}
         <div className="portfolio-nav-bar">
           <div className="portfolio-tabs-list">
             <button
-              className={`portfolio-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
-              onClick={() => setActiveTab('overview')}
+              className={`portfolio-tab-btn ${activeTab === 'details' ? 'active' : ''}`}
+              onClick={() => setActiveTab('details')}
             >
               <span>🌟</span>
-              <span>Tổng Quan Portfolio</span>
-            </button>
-            <button
-              className={`portfolio-tab-btn ${activeTab === 'specs' ? 'active' : ''}`}
-              onClick={() => setActiveTab('specs')}
-            >
-              <span>📋</span>
-              <span>Đặc Tả Kỹ Thuật (Specs)</span>
-            </button>
-            <button
-              className={`portfolio-tab-btn ${activeTab === 'backlog' ? 'active' : ''}`}
-              onClick={() => setActiveTab('backlog')}
-            >
-              <span>🚀</span>
-              <span>Lộ Trình & Backlog</span>
+              <span>Tổng Quan, Lộ Trình & Đặc Tả</span>
               {backlog.length > 0 && (
                 <span className="portfolio-tab-badge">
-                  {completedCount}/{backlog.length}
+                  {completedCount}/{backlog.length} task
                 </span>
               )}
             </button>
+
             {canEdit && (
               <button
                 className={`portfolio-tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
@@ -637,14 +642,14 @@ export function AppPortfolioModal({
 
         {/* Modal Scrollable Body */}
         <div className="portfolio-body">
-          {/* TAB 1: OVERVIEW */}
-          {activeTab === 'overview' && (
+          {/* UNIFIED SINGLE TAB: OVERVIEW + ROADMAP/BACKLOG + SPECS */}
+          {activeTab === 'details' && (
             <div className="portfolio-tab-content">
               <div className="portfolio-grid-layout">
-                {/* Unified Hero Overview Card (Description + System Info + Launch Action) */}
+                {/* 1. SECTION: HERO OVERVIEW & SYSTEM INFO */}
                 <div className="portfolio-overview-hero-card">
                   <div className="portfolio-overview-split">
-                    {/* Left: Description & Quick Links */}
+                    {/* Left: Description & Quick Actions */}
                     <div className="portfolio-desc-block">
                       <h3 className="portfolio-card-title">
                         <span>📖</span> Mô Tả & Giới Thiệu
@@ -653,7 +658,7 @@ export function AppPortfolioModal({
                         {app.description || 'Chưa có mô tả chi tiết cho ứng dụng này.'}
                       </p>
 
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.5rem' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.75rem' }}>
                         {app.frontendUrl && (
                           <a
                             href={app.frontendUrl}
@@ -667,14 +672,17 @@ export function AppPortfolioModal({
                           </a>
                         )}
 
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={() => setActiveTab('specs')}
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                        >
-                          <span>📋 Xem Đặc Tả SRS</span>
-                        </button>
+                        {canEdit && (
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => setActiveTab('settings')}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                          >
+                            <EditIcon size={14} />
+                            <span>Chỉnh Sửa Thông Tin</span>
+                          </button>
+                        )}
                       </div>
                     </div>
 
@@ -697,7 +705,9 @@ export function AppPortfolioModal({
 
                       <div className="portfolio-meta-item">
                         <span className="meta-label">Database</span>
-                        <span className="meta-value" style={{ color: '#38bdf8' }}>{app.database || 'Supabase'}</span>
+                        <span className="meta-value" style={{ color: '#38bdf8' }}>
+                          {app.database || 'Supabase'}
+                        </span>
                       </div>
 
                       <div className="portfolio-meta-item">
@@ -720,7 +730,11 @@ export function AppPortfolioModal({
                               href={app.github}
                               target="_blank"
                               rel="noreferrer"
-                              style={{ color: '#60a5fa', textDecoration: 'underline', fontSize: '0.82rem' }}
+                              style={{
+                                color: '#60a5fa',
+                                textDecoration: 'underline',
+                                fontSize: '0.82rem',
+                              }}
                             >
                               {app.github.replace('https://github.com/', '')} ↗
                             </a>
@@ -743,201 +757,154 @@ export function AppPortfolioModal({
                   </div>
                 )}
 
-                {/* Progress & Backlog Section */}
+                {/* 2. SECTION: ROADMAP & BACKLOG MANAGEMENT */}
                 <div className="portfolio-card">
                   <div className="portfolio-card-header-row">
-                    <h3 className="portfolio-card-title">
-                      <span>🚀</span> Tiến Độ Thực Hiện & Backlog ({backlog.length} task)
-                    </h3>
-                    <button
-                      className="btn btn-secondary btn-sm"
-                      onClick={() => setActiveTab('backlog')}
-                    >
-                      Mở quản lý backlog ({backlog.length})
-                    </button>
+                    <div>
+                      <h3 className="portfolio-card-title">
+                        <span>🚀</span> Lộ Trình & Tiến Độ Thực Hiện ({backlog.length} task)
+                      </h3>
+                      <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+                        {canEdit
+                          ? 'Tick hoàn thành, thêm nhiệm vụ mới hoặc xóa task trực tiếp.'
+                          : 'Theo dõi tiến độ triển khai các tính năng.'}
+                      </p>
+                    </div>
+
+                    <div className="portfolio-progress-chip">
+                      <strong>{completedCount}</strong> / {backlog.length} task ({progressPercent}%)
+                    </div>
                   </div>
 
-                  <div className="portfolio-progress-bar-wrapper">
+                  {/* Progress Bar */}
+                  <div className="portfolio-progress-bar-wrapper" style={{ margin: '0.85rem 0 1.25rem 0' }}>
                     <div className="portfolio-progress-bar-track">
                       <div
                         className="portfolio-progress-bar-fill"
                         style={{ width: `${progressPercent}%` }}
                       />
                     </div>
-                    <span className="portfolio-progress-text">{progressPercent}% Hoàn thành</span>
                   </div>
 
+                  {/* Add Task Input (Admin Only) */}
+                  {canEdit && (
+                    <div className="portfolio-add-task-row" style={{ marginBottom: '1rem' }}>
+                      <input
+                        type="text"
+                        className="input-text"
+                        placeholder="Nhập tên nhiệm vụ / tính năng mới cần làm..."
+                        value={newBacklogTitle}
+                        onChange={(e) => setNewBacklogTitle(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddBacklog()}
+                      />
+                      <button className="btn btn-primary" onClick={handleAddBacklog}>
+                        <PlusIcon size={16} />
+                        <span>Thêm Task</span>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Task List */}
                   {backlog.length === 0 ? (
-                    <p className="portfolio-empty-text" style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#94a3b8' }}>
-                      Chưa có đầu việc backlog nào được thêm.
-                    </p>
+                    <div className="portfolio-empty-state" style={{ padding: '1.5rem 1rem' }}>
+                      <span>📝</span>
+                      <p>Dự án này hiện chưa có nhiệm vụ backlog nào.</p>
+                    </div>
                   ) : (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '0.5rem', marginTop: '1rem' }}>
-                      {backlog.slice(0, 6).map((item) => (
+                    <div className="portfolio-backlog-full-list">
+                      {backlog.map((item) => (
                         <div
                           key={item.id}
-                          className={`portfolio-backlog-preview-item ${item.isCompleted ? 'completed' : ''}`}
+                          className={`portfolio-backlog-row ${item.isCompleted ? 'done' : ''}`}
+                          onClick={() => canEdit && handleToggleBacklog(item)}
+                          style={{ cursor: canEdit ? 'pointer' : 'default' }}
                         >
-                          <span className="backlog-preview-check">
-                            {item.isCompleted ? '✓' : '○'}
-                          </span>
-                          <span className="backlog-preview-title">{item.title}</span>
+                          <div className="backlog-row-left">
+                            <input
+                              type="checkbox"
+                              checked={item.isCompleted}
+                              onChange={() => canEdit && handleToggleBacklog(item)}
+                              disabled={!canEdit}
+                              style={{
+                                cursor: canEdit ? 'pointer' : 'default',
+                                width: '18px',
+                                height: '18px',
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                            <span className="backlog-row-title">{item.title}</span>
+                          </div>
+
+                          {canEdit && (
+                            <button
+                              className="btn-icon-sm danger"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteBacklog(item.id);
+                              }}
+                              title="Xóa nhiệm vụ"
+                            >
+                              <TrashIcon size={14} />
+                            </button>
+                          )}
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
-              </div>
-            </div>
-          )}
 
-          {/* TAB 2: SPECIFICATIONS */}
-          {activeTab === 'specs' && (
-            <div className="portfolio-tab-content">
-              <div className="portfolio-spec-header">
-                <div className="portfolio-spec-lang-btns">
-                  <button
-                    type="button"
-                    className={`btn ${specLang === 'vi' ? 'btn-primary' : 'btn-secondary'}`}
-                    onClick={() => setSpecLang('vi')}
-                  >
-                    🇻🇳 Đặc Tả Tiếng Việt
-                  </button>
-                  <button
-                    type="button"
-                    className={`btn ${specLang === 'en' ? 'btn-primary' : 'btn-secondary'}`}
-                    onClick={() => setSpecLang('en')}
-                  >
-                    🇬🇧 English Specification
-                  </button>
-                </div>
-
-                <div className="portfolio-spec-meta">
-                  <span className="portfolio-spec-date">
-                    📅 Cập nhật lần cuối: {app.specUpdatedAt || '23/09/2026'}
-                  </span>
-                  {canEdit && (
-                    <button
-                      className="btn btn-secondary btn-sm"
-                      onClick={() => setActiveTab('settings')}
-                      title="Chỉnh sửa văn bản đặc tả trong phần cài đặt"
-                    >
-                      <EditIcon size={14} />
-                      <span>Sửa Đặc Tả</span>
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              <div className="portfolio-spec-doc-container">
-                <SpecDocRenderer
-                  content={
-                    specLang === 'en'
-                      ? (app.specEn || 'No English specification available for this project.')
-                      : (app.specVi || 'Chưa có đặc tả tiếng Việt cho dự án này.')
-                  }
-                />
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: BACKLOG & ROADMAP */}
-          {activeTab === 'backlog' && (
-            <div className="portfolio-tab-content">
-              <div className="portfolio-card">
-                <div className="portfolio-card-header-row">
-                  <div>
-                    <h3 className="portfolio-card-title">
-                      <span>🚀</span> Danh Sách Nhiệm Vụ & Kế Hoạch (Backlog)
-                    </h3>
-                    <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.2rem' }}>
-                      {canEdit
-                        ? 'Admin có thể tick hoàn thành, thêm nhiệm vụ mới hoặc xóa task.'
-                        : 'Xem tiến độ thực hiện các tính năng của dự án.'}
-                    </p>
-                  </div>
-
-                  <div className="portfolio-progress-chip">
-                    <strong>{completedCount}</strong> / {backlog.length} task xong ({progressPercent}%)
-                  </div>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="portfolio-progress-bar-wrapper" style={{ margin: '1rem 0 1.5rem 0' }}>
-                  <div className="portfolio-progress-bar-track">
-                    <div
-                      className="portfolio-progress-bar-fill"
-                      style={{ width: `${progressPercent}%` }}
-                    />
-                  </div>
-                </div>
-
-                {/* Add Task Input (Admin Only) */}
-                {canEdit && (
-                  <div className="portfolio-add-task-row">
-                    <input
-                      type="text"
-                      className="input-text"
-                      placeholder="Nhập tên nhiệm vụ / tính năng cần làm..."
-                      value={newBacklogTitle}
-                      onChange={(e) => setNewBacklogTitle(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleAddBacklog()}
-                    />
-                    <button className="btn btn-primary" onClick={handleAddBacklog}>
-                      <PlusIcon size={16} />
-                      <span>Thêm Task</span>
-                    </button>
-                  </div>
-                )}
-
-                {/* Task List */}
-                {backlog.length === 0 ? (
-                  <div className="portfolio-empty-state">
-                    <span>📝</span>
-                    <p>Dự án này hiện chưa có nhiệm vụ backlog nào.</p>
-                  </div>
-                ) : (
-                  <div className="portfolio-backlog-full-list">
-                    {backlog.map((item) => (
-                      <div
-                        key={item.id}
-                        className={`portfolio-backlog-row ${item.isCompleted ? 'done' : ''}`}
-                        onClick={() => canEdit && handleToggleBacklog(item)}
-                        style={{ cursor: canEdit ? 'pointer' : 'default' }}
+                {/* 3. SECTION: SRS SPECIFICATION DOCUMENT */}
+                <div className="portfolio-card">
+                  <div className="portfolio-spec-header" style={{ marginBottom: '1rem' }}>
+                    <div className="portfolio-spec-lang-btns">
+                      <button
+                        type="button"
+                        className={`btn ${specLang === 'vi' ? 'btn-primary' : 'btn-secondary'}`}
+                        onClick={() => setSpecLang('vi')}
                       >
-                        <div className="backlog-row-left">
-                          <input
-                            type="checkbox"
-                            checked={item.isCompleted}
-                            onChange={() => canEdit && handleToggleBacklog(item)}
-                            disabled={!canEdit}
-                            style={{ cursor: canEdit ? 'pointer' : 'default', width: '18px', height: '18px' }}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                          <span className="backlog-row-title">{item.title}</span>
-                        </div>
+                        🇻🇳 Đặc Tả Tiếng Việt
+                      </button>
+                      <button
+                        type="button"
+                        className={`btn ${specLang === 'en' ? 'btn-primary' : 'btn-secondary'}`}
+                        onClick={() => setSpecLang('en')}
+                      >
+                        🇬🇧 English Specification
+                      </button>
+                    </div>
 
-                        {canEdit && (
-                          <button
-                            className="btn-icon-sm danger"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteBacklog(item.id);
-                            }}
-                            title="Xóa nhiệm vụ"
-                          >
-                            <TrashIcon size={14} />
-                          </button>
-                        )}
-                      </div>
-                    ))}
+                    <div className="portfolio-spec-meta">
+                      <span className="portfolio-spec-date">
+                        📅 Cập nhật: {app.specUpdatedAt || '27/09/2026'}
+                      </span>
+                      {canEdit && (
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          onClick={() => setActiveTab('settings')}
+                          title="Chỉnh sửa văn bản đặc tả trong phần cài đặt"
+                        >
+                          <EditIcon size={14} />
+                          <span>Sửa Đặc Tả</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
-                )}
+
+                  <div className="portfolio-spec-doc-container">
+                    <SpecDocRenderer
+                      content={
+                        specLang === 'en'
+                          ? app.specEn || 'No English specification available for this project.'
+                          : app.specVi || 'Chưa có đặc tả tiếng Việt cho dự án này.'
+                      }
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
-          {/* TAB 4: SETTINGS & MANAGEMENT (ADMIN ONLY - UNIFIED SINGLE EDIT FORM) */}
+          {/* ADMIN SETTINGS & CONFIGURATION TAB */}
           {activeTab === 'settings' && canEdit && (
             <div className="portfolio-tab-content">
               <form onSubmit={handleSaveForm}>
@@ -947,9 +914,7 @@ export function AppPortfolioModal({
                   </h3>
 
                   {saveSuccessMessage && (
-                    <div className="portfolio-success-alert">
-                      ✓ {saveSuccessMessage}
-                    </div>
+                    <div className="portfolio-success-alert">✓ {saveSuccessMessage}</div>
                   )}
 
                   {/* Section 1: Thông tin cơ bản */}
@@ -1156,8 +1121,12 @@ export function AppPortfolioModal({
                     </button>
 
                     <div style={{ display: 'flex', gap: '0.75rem' }}>
-                      <button type="button" className="btn btn-secondary" onClick={onClose}>
-                        Đóng
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => setActiveTab('details')}
+                      >
+                        Quay lại xem chi tiết
                       </button>
                       <button type="submit" className="btn btn-primary" disabled={isSaving}>
                         {isSaving ? 'Đang lưu...' : 'Lưu Tất Cả Thay Đổi'}
@@ -1169,6 +1138,7 @@ export function AppPortfolioModal({
             </div>
           )}
         </div>
+
         {isShareModalOpen && (
           <ShareAppsModal
             allApps={[app]}

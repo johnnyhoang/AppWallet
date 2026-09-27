@@ -224,9 +224,7 @@ export default function AppWallet() {
   const portfolioInitialTab = useMemo(() => {
     const tabParam = searchParams.get('tab');
     if (tabParam === 'settings') return 'settings';
-    if (tabParam === 'specs') return 'specs';
-    if (tabParam === 'backlog') return 'backlog';
-    return 'overview';
+    return 'details';
   }, [searchParams]);
 
   // Dynamic Categories list extracted from projects
