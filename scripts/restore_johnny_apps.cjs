@@ -1,5 +1,5 @@
 /**
- * RESTORE Johnny Hoang's 20 apps to aw_app_projects on msozshwatonyxnkaqjfs
+ * RESTORE Johnny Hoang's 23 apps to aw_app_projects on Supabase
  * Run: node scripts/restore_johnny_apps.cjs
  */
 const { createClient } = require('@supabase/supabase-js');
@@ -9,14 +9,14 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zb3pzaHdhdG9ueXhua2FxamZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MjU5MzYsImV4cCI6MjA4ODIwMTkzNn0.lbfHxn4YxXNLHB0uVBDInrHh8wsCbusDr1_SroACHgk'
 );
 
-// Johnny Hoang's 20 apps - restored data
+// Johnny Hoang's 23 apps
 const johnnyApps = [
   {
     id: 'app-github-tokenwallet',
     name: 'jWallet - Token & App Workspace',
     developer: 'johnnyhoang',
-    github: 'https://github.com/johnnyhoang/TokenWallet',
-    hosting: 'Vercel (token-wallet)',
+    github: 'https://github.com/johnnyhoang/AppWallet',
+    hosting: 'Vercel (token-wallet-chi)',
     url: 'https://jwallet.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 1',
@@ -31,8 +31,8 @@ const johnnyApps = [
     name: 'GoUs - Family & US Immigration Management',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/gous',
-    hosting: 'Vercel (gous)',
-    url: 'https://gous.minkoi.org',
+    hosting: 'Vercel (gous-pi)',
+    url: 'https://jgous.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 1',
     status: 'Production',
@@ -47,7 +47,7 @@ const johnnyApps = [
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/shopee-buyer-history',
     hosting: 'Vercel (shopee-buyer-history)',
-    url: 'https://shopee.minkoi.org',
+    url: 'https://jshopee.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 1',
     status: 'Production',
@@ -61,8 +61,8 @@ const johnnyApps = [
     name: 'BETH Automated Trading System',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/BETH',
-    hosting: 'Vercel (beth)',
-    url: 'https://beth.minkoi.org',
+    hosting: 'Vercel (beth-theta)',
+    url: 'https://jbeth.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 2',
     status: 'Production',
@@ -91,8 +91,8 @@ const johnnyApps = [
     name: 'Admission Decision Engine (ADE)',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/AdmissionDecisionEngine',
-    hosting: 'Vercel (ade / ade-backend)',
-    url: 'https://ade.minkoi.org',
+    hosting: 'Vercel (ade-backend)',
+    url: 'https://jade.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 2',
     status: 'Production',
@@ -106,8 +106,8 @@ const johnnyApps = [
     name: 'AWS Practice & Resource Center (Bo Hoc)',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/aws',
-    hosting: 'Vercel (aws)',
-    url: 'https://bohoc.minkoi.org',
+    hosting: 'Vercel (aws-ashen)',
+    url: 'https://jbohoc.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 1',
     status: 'Production',
@@ -121,8 +121,8 @@ const johnnyApps = [
     name: 'Mom Health Management',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/mom_health',
-    hosting: 'Vercel (mom-health)',
-    url: 'https://health.minkoi.org',
+    hosting: 'Vercel (mom-health-eight)',
+    url: 'https://jhealth.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 1',
     status: 'Production',
@@ -136,8 +136,8 @@ const johnnyApps = [
     name: 'Mikawaii (Game Eng G10)',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/mikawaii',
-    hosting: 'Vercel (mikawaii)',
-    url: 'https://mikawaii.minkoi.org',
+    hosting: 'Vercel (game-eng-g10-backend)',
+    url: 'https://jmikawaii.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 2',
     status: 'Production',
@@ -151,8 +151,8 @@ const johnnyApps = [
     name: 'Menstrual Cycle Tracker (MOM)',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/menstrual_cycle',
-    hosting: 'Vercel (menstrual-cycle)',
-    url: 'https://mom.minkoi.org',
+    hosting: 'Vercel (menstrual-cycle-puce)',
+    url: 'https://jmom.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 1',
     status: 'Production',
@@ -166,8 +166,8 @@ const johnnyApps = [
     name: 'Coffee Shop 24h',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/coffee_shop_24hxh',
-    hosting: 'Vercel (coffee-shop-24hxh)',
-    url: 'https://cf24.minkoi.org',
+    hosting: 'Vercel (coffee24hxh-api)',
+    url: 'https://jcf24.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 1',
     status: 'Production',
@@ -181,8 +181,8 @@ const johnnyApps = [
     name: 'Quan ly ho so hoc sinh DTNT (QLHS DTNT)',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/qlhs_dtnt',
-    hosting: 'Vercel (dtnt)',
-    url: 'https://dtnt.minkoi.org',
+    hosting: 'Vercel (qlhs-dtnt)',
+    url: 'https://jdtnt.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 2',
     status: 'Production',
@@ -196,8 +196,8 @@ const johnnyApps = [
     name: 'Collaboration Board',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/collaboration-board',
-    hosting: 'Vercel (collaboration-board)',
-    url: 'https://collab.minkoi.org',
+    hosting: 'Vercel (collaboration-board-fawn)',
+    url: 'https://jcollab.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 2',
     status: 'Production',
@@ -226,8 +226,8 @@ const johnnyApps = [
     name: 'Family Management',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/family-management',
-    hosting: 'Vercel (family)',
-    url: 'https://family.minkoi.org',
+    hosting: 'Vercel (family-management-eight)',
+    url: 'https://jfamily.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 2',
     status: 'Production',
@@ -241,8 +241,8 @@ const johnnyApps = [
     name: 'Talent Flow HR Portal',
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/talent-flow',
-    hosting: 'Vercel (talent-flow)',
-    url: 'https://talent.minkoi.org',
+    hosting: 'Vercel (talent-flow-rho-six)',
+    url: 'https://jtalent.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 2',
     status: 'Production',
@@ -257,7 +257,7 @@ const johnnyApps = [
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/learning-and-development-operation',
     hosting: 'Vercel (learning-and-development-operation)',
-    url: 'https://lnd.minkoi.org',
+    url: 'https://jlnd.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 2',
     status: 'Production',
@@ -287,7 +287,7 @@ const johnnyApps = [
     developer: 'johnnyhoang',
     github: 'https://github.com/johnnyhoang/Shared-Work-Life-Hub',
     hosting: 'Vercel (shared-work-life-hub)',
-    url: 'https://hub.minkoi.org',
+    url: 'https://jhub.minkoi.org',
     type: 'Web App',
     database: 'JH Supabase Data 1',
     status: 'Production',
@@ -311,15 +311,58 @@ const johnnyApps = [
     tech_stack: 'React, OpenCV.js WebAssembly, Tesseract.js OCR, PDF-Lib',
     tech_notes: 'In-browser computer vision document scanner with perspective correction and OCR.',
   },
+  {
+    id: 'app-quota-tracker',
+    name: 'Quota Tracker',
+    developer: 'johnnyhoang',
+    github: 'https://github.com/johnnyhoang/quota-tracker',
+    hosting: 'Vercel (quota-tracker)',
+    url: 'https://jquota.minkoi.org',
+    type: 'Web App',
+    database: 'JH Supabase Data 1',
+    status: 'Production',
+    priority: 'High',
+    description: 'Real-time AI API quota monitor, token usage velocity metrics, and automated quota budget exhaustion alerts.',
+    tech_stack: 'React 19, Vite, TypeScript, Supabase PostgreSQL, Chart.js',
+    tech_notes: 'Live quota telemetry dashboard with dynamic reset countdowns.',
+  },
+  {
+    id: 'app-profile-management',
+    name: 'Profile Management System',
+    developer: 'johnnyhoang',
+    github: 'https://github.com/johnnyhoang/profile-management',
+    hosting: 'Vercel (profile-management)',
+    url: 'https://jprofile.minkoi.org',
+    type: 'Web App',
+    database: 'JH Supabase Data 1',
+    status: 'Production',
+    priority: 'High',
+    description: 'Executive profile and career portfolio management hub with verified credential showcase and resume export.',
+    tech_stack: 'React 19, Vite, TypeScript, Tailwind CSS, Supabase PostgreSQL, PDF Generator',
+    tech_notes: 'Executive profile dossier platform with credential verification.',
+  },
+  {
+    id: 'app-skill-gap-analyst',
+    name: 'Skill Gap Analyst',
+    developer: 'johnnyhoang',
+    github: 'https://github.com/johnnyhoang/skill-gap-analyst',
+    hosting: 'Vercel (skill-gap-analyst)',
+    url: 'https://jgap.minkoi.org',
+    type: 'Web App',
+    database: 'JH Supabase Data 1',
+    status: 'Production',
+    priority: 'High',
+    description: 'AI-driven skill assessment matrix, radar benchmark visualization, and personalized career growth roadmap generator.',
+    tech_stack: 'React 19, Vite, TypeScript, Supabase PostgreSQL, Recharts, Gemini AI',
+    tech_notes: 'Skill competency radar analyzer with AI curriculum recommendation.',
+  },
 ];
 
 async function restoreJohnnyApps() {
-  console.log('🔄 Restoring Johnny Hoang\'s 20 apps to aw_app_projects...\n');
+  console.log('🔄 Restoring Johnny Hoang\'s 23 apps to aw_app_projects...\n');
 
-  // First, delete MinKoi's apps that were wrongly inserted
   const johnnyIds = johnnyApps.map(a => a.id);
   
-  // Check current state
   const { data: current, error: fetchErr } = await sb.from('aw_app_projects').select('id, name');
   if (fetchErr) {
     console.error('❌ Cannot fetch current data:', fetchErr);
@@ -327,15 +370,13 @@ async function restoreJohnnyApps() {
   }
   console.log(`📋 Current aw_app_projects has ${current?.length || 0} rows`);
   
-  // Delete everything that's not in Johnny's list (MinKoi's apps that were inserted)
   const toDelete = (current || []).filter(r => !johnnyIds.includes(r.id));
   if (toDelete.length > 0) {
-    console.log(`🗑️  Removing ${toDelete.length} wrong rows:`, toDelete.map(r => r.name));
+    console.log(`🗑️  Removing ${toDelete.length} non-Johnny rows:`, toDelete.map(r => r.name));
     const { error: delErr } = await sb.from('aw_app_projects').delete().in('id', toDelete.map(r => r.id));
     if (delErr) console.error('Delete error:', delErr);
   }
 
-  // Upsert all Johnny's apps
   let ok = 0, fail = 0;
   for (const app of johnnyApps) {
     const row = {
@@ -359,7 +400,7 @@ async function restoreJohnnyApps() {
       console.error(`❌ [${app.id}] ${app.name}:`, error.message);
       fail++;
     } else {
-      console.log(`✅ [${app.id}] ${app.name}`);
+      console.log(`✅ [${app.id}] ${app.name} -> ${app.url}`);
       ok++;
     }
   }

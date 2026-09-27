@@ -19,6 +19,7 @@ import { AddAppModal } from '../components/AddAppModal';
 import { ShareAppsModal } from '../components/ShareAppsModal';
 import { removedIds } from '../data/syncPolicy';
 import { useAuth } from '../contexts/AuthContext';
+import { getAppTheme } from '../utils/appCardThemes';
 import {
   SearchIcon,
   RefreshIcon,
@@ -80,11 +81,11 @@ function getFaviconCandidates(url?: string, id?: string): string[] {
   return candidates;
 }
 
-function AppIcon({ title, frontendUrl, id }: { title: string; frontendUrl?: string; id: string }) {
+function AppIcon({ title, frontendUrl, id, customBg }: { title: string; frontendUrl?: string; id: string; customBg?: string }) {
   const candidates = useMemo(() => getFaviconCandidates(frontendUrl, id), [frontendUrl, id]);
   const [candidateIndex, setCandidateIndex] = useState(0);
   const initials = getAppInitials(title);
-  const bgGradient = getAppGradient(title + id);
+  const bgGradient = customBg || getAppGradient(title + id);
 
   useEffect(() => {
     setCandidateIndex(0);
@@ -566,11 +567,12 @@ export default function AppWallet() {
             </div>
           </div>
 
-          {/* 5 PER ROW APP STORE GRID */}
+          {/* 5 PER ROW APP STORE GRID WITH UNIQUE WEBAPP THEME STYLING */}
           <div className="store-grid">
             {filteredApps.map((app, index) => {
               const backlogCount = app.backlog?.length || 0;
               const isSelected = selectedAppIds.has(app.id);
+              const theme = getAppTheme(app.id, app.title);
 
               return (
                 <div
@@ -578,7 +580,18 @@ export default function AppWallet() {
                   className={`store-card ${app.isDisabled ? 'disabled' : ''} ${
                     isSelectMode && isSelected ? 'selected-card' : ''
                   }`}
-                  style={{ animationDelay: `${index * 0.04}s`, cursor: 'pointer' }}
+                  style={{
+                    animationDelay: `${index * 0.04}s`,
+                    cursor: 'pointer',
+                    background: theme.bgGradient,
+                    borderColor: isSelected ? '#a855f7' : theme.borderColor,
+                    fontFamily: theme.fontFamily,
+                    boxShadow: isSelected
+                      ? '0 0 22px rgba(168, 85, 247, 0.45)'
+                      : `0 6px 18px rgba(0, 0, 0, 0.25)`,
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
                   onClick={() => {
                     if (isSelectMode) {
                       handleToggleSelectApp(app.id);
@@ -592,7 +605,57 @@ export default function AppWallet() {
                       : `Bấm để xem Portfolio chi tiết & đặc tả của ${app.title}`
                   }
                 >
+                  {/* Top Color Accent Strip */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '3.5px',
+                      background: theme.topStripGradient,
+                      zIndex: 3,
+                    }}
+                  />
+
                   <div>
+                    {/* App Brand Tagline Header */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '0.45rem',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.02em',
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: theme.accentColor,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        <span>{theme.badgeIcon}</span>
+                        <span>{theme.badgeLabel}</span>
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.65rem',
+                          color: theme.categoryColor,
+                          opacity: 0.85,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.04em',
+                          fontWeight: 600,
+                        }}
+                      >
+                        {theme.brandName}
+                      </span>
+                    </div>
+
                     {/* Squircle Icon & Title Block */}
                     <div className="store-card-header">
                       {isSelectMode && (
@@ -603,12 +666,38 @@ export default function AppWallet() {
                           {isSelected && <CheckIcon size={12} />}
                         </div>
                       )}
-                      <AppIcon title={app.title} frontendUrl={app.frontendUrl} id={app.id} />
+                      <AppIcon
+                        title={app.title}
+                        frontendUrl={app.frontendUrl}
+                        id={app.id}
+                        customBg={theme.iconBg}
+                      />
                       <div className="store-app-meta">
-                        <div className="store-app-title" title={app.title}>
+                        <div
+                          className="store-app-title"
+                          title={app.title}
+                          style={{
+                            color: theme.titleColor,
+                            fontFamily: theme.fontFamily,
+                          }}
+                        >
                           {app.title}
                         </div>
-                        <div className="store-app-category">{app.category || 'Web App'}</div>
+                        <div
+                          className="store-app-category"
+                          style={{
+                            background: theme.categoryBg,
+                            color: theme.categoryColor,
+                            border: `1px solid ${theme.categoryBorder}`,
+                            display: 'inline-block',
+                            padding: '1px 6px',
+                            borderRadius: '5px',
+                            fontSize: '0.68rem',
+                            fontWeight: 700,
+                          }}
+                        >
+                          {app.category || 'Web App'}
+                        </div>
                       </div>
                     </div>
 
@@ -616,11 +705,13 @@ export default function AppWallet() {
                     <div className="store-card-status-bar">
                       <div
                         className="store-health-tag"
-                        title={app.healthCheckedAt ? `Kiểm tra tự động lúc: ${app.healthCheckedAt}` : 'Chưa kiểm tra tự động'}
+                        title={
+                          app.healthCheckedAt
+                            ? `Kiểm tra tự động lúc: ${app.healthCheckedAt}`
+                            : 'Chưa kiểm tra tự động'
+                        }
                       >
-                        <span
-                          className={`store-health-dot ${app.healthStatus || 'unknown'}`}
-                        />
+                        <span className={`store-health-dot ${app.healthStatus || 'unknown'}`} />
                         <span>
                           {app.healthStatus === 'healthy'
                             ? 'Healthy'
@@ -645,9 +736,9 @@ export default function AppWallet() {
                             fontWeight: 600,
                             padding: '0.15rem 0.5rem',
                             borderRadius: '6px',
-                            background: 'rgba(59, 130, 246, 0.15)',
-                            color: '#60a5fa',
-                            border: '1px solid rgba(59, 130, 246, 0.35)',
+                            background: theme.specsBtnBg,
+                            color: theme.specsBtnColor,
+                            border: `1px solid ${theme.specsBtnBorder}`,
                             cursor: 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
@@ -657,7 +748,16 @@ export default function AppWallet() {
                           <span>📋</span>
                           <span>Specs</span>
                         </button>
-                        <span className="store-status-badge">{app.status}</span>
+                        <span
+                          className="store-status-badge"
+                          style={{
+                            background: theme.statusBg,
+                            color: theme.statusColor,
+                            border: `1px solid ${theme.statusBorder}`,
+                          }}
+                        >
+                          {app.status}
+                        </span>
                       </div>
                     </div>
 
@@ -673,23 +773,9 @@ export default function AppWallet() {
                           gap: '5px',
                           marginTop: '0.45rem',
                           marginBottom: '0.15rem',
-                          background: app.database.includes('Data 1')
-                            ? 'rgba(16, 185, 129, 0.12)'
-                            : app.database.includes('Data 2')
-                            ? 'rgba(99, 102, 241, 0.12)'
-                            : 'rgba(148, 163, 184, 0.12)',
-                          color: app.database.includes('Data 1')
-                            ? '#10b981'
-                            : app.database.includes('Data 2')
-                            ? '#818cf8'
-                            : '#94a3b8',
-                          border: `1px solid ${
-                            app.database.includes('Data 1')
-                              ? 'rgba(16, 185, 129, 0.3)'
-                              : app.database.includes('Data 2')
-                              ? 'rgba(99, 102, 241, 0.3)'
-                              : 'rgba(148, 163, 184, 0.25)'
-                          }`,
+                          background: theme.dbBg,
+                          color: theme.dbColor,
+                          border: `1px solid ${theme.dbBorder}`,
                         }}
                       >
                         <span>🗄️</span>
@@ -701,7 +787,9 @@ export default function AppWallet() {
                     <div className="store-manual-check-bar">
                       <button
                         type="button"
-                        className={`store-manual-check-btn ${app.manualChecked ? 'checked' : 'uncheck'}`}
+                        className={`store-manual-check-btn ${
+                          app.manualChecked ? 'checked' : 'uncheck'
+                        }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           if (canEdit) handleToggleManualCheck(app);
@@ -709,7 +797,9 @@ export default function AppWallet() {
                         disabled={!canEdit}
                         title={
                           canEdit
-                            ? (app.manualChecked ? 'Bấm để hủy hoặc cập nhật ngày xác nhận' : 'Bấm để xác nhận bạn đã kiểm tra ứng dụng')
+                            ? app.manualChecked
+                              ? 'Bấm để hủy hoặc cập nhật ngày xác nhận'
+                              : 'Bấm để xác nhận bạn đã kiểm tra ứng dụng'
                             : 'Trạng thái xác nhận kiểm tra'
                         }
                       >
@@ -736,7 +826,10 @@ export default function AppWallet() {
                   </div>
 
                   {/* Card Footer: OPEN Button, SPECS Button, SHARE Button & Backlog */}
-                  <div className="store-card-footer" style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
+                  <div
+                    className="store-card-footer"
+                    style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}
+                  >
                     {app.frontendUrl ? (
                       <a
                         href={app.frontendUrl}
@@ -745,6 +838,13 @@ export default function AppWallet() {
                         className="store-btn-open"
                         title={`Mở ${app.title}`}
                         onClick={(e) => e.stopPropagation()}
+                        style={{
+                          background: theme.openBtnBg,
+                          color: theme.openBtnColor,
+                          border: `1px solid ${theme.openBtnBorder}`,
+                          boxShadow: `0 2px 8px ${theme.openBtnGlow}`,
+                          fontWeight: 700,
+                        }}
                       >
                         MỞ
                         <ExternalLinkIcon size={12} />
@@ -774,9 +874,9 @@ export default function AppWallet() {
                         justifyContent: 'center',
                         gap: '0.25rem',
                         padding: '0.45rem 0.55rem',
-                        background: 'rgba(59, 130, 246, 0.15)',
-                        color: '#60a5fa',
-                        border: '1px solid rgba(59, 130, 246, 0.35)',
+                        background: theme.specsBtnBg,
+                        color: theme.specsBtnColor,
+                        border: `1px solid ${theme.specsBtnBorder}`,
                         borderRadius: '9999px',
                         fontWeight: 700,
                         fontSize: '0.75rem',
@@ -801,7 +901,10 @@ export default function AppWallet() {
                     </button>
 
                     {backlogCount > 0 && (
-                      <span className="store-backlog-chip" title={`${backlogCount} công việc backlog`}>
+                      <span
+                        className="store-backlog-chip"
+                        title={`${backlogCount} công việc backlog`}
+                      >
                         {backlogCount} task
                       </span>
                     )}
