@@ -88,13 +88,13 @@ function formatInline(text: string): React.ReactNode {
         <code
           key={i}
           style={{
-            background: 'rgba(99, 102, 241, 0.18)',
+            background: 'rgba(99, 102, 241, 0.15)',
             color: '#a5b4fc',
-            padding: '0.15rem 0.4rem',
+            padding: '0.12rem 0.35rem',
             borderRadius: '4px',
             fontFamily: 'monospace',
             fontSize: '0.85em',
-            border: '1px solid rgba(99, 102, 241, 0.3)',
+            border: '1px solid rgba(99, 102, 241, 0.25)',
           }}
         >
           {part.slice(1, -1)}
@@ -118,7 +118,7 @@ function SpecDocRenderer({ content }: { content: string }) {
       elements.push(
         <ul
           key={`ul-${keyPrefix}-${elements.length}`}
-          style={{ paddingLeft: '1.4rem', marginBottom: '1rem', lineHeight: '1.75' }}
+          style={{ paddingLeft: '1.25rem', marginBottom: '0.85rem', lineHeight: '1.7' }}
         >
           {listItems}
         </ul>
@@ -145,8 +145,8 @@ function SpecDocRenderer({ content }: { content: string }) {
             fontSize: '1.35rem',
             fontWeight: 700,
             color: '#60a5fa',
-            borderBottom: '2px solid rgba(99, 102, 241, 0.3)',
             paddingBottom: '0.4rem',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
             marginTop: index === 0 ? '0' : '1.5rem',
             marginBottom: '0.85rem',
             letterSpacing: '-0.01em',
@@ -167,12 +167,9 @@ function SpecDocRenderer({ content }: { content: string }) {
             fontSize: '1.1rem',
             fontWeight: 700,
             color: '#38bdf8',
-            background: 'rgba(56, 189, 248, 0.08)',
-            padding: '0.4rem 0.75rem',
-            borderRadius: '6px',
-            borderLeft: '4px solid #38bdf8',
-            marginTop: '1.25rem',
-            marginBottom: '0.75rem',
+            marginTop: '1.5rem',
+            marginBottom: '0.65rem',
+            letterSpacing: '-0.01em',
           }}
         >
           {formatInline(trimmed.substring(3))}
@@ -190,7 +187,7 @@ function SpecDocRenderer({ content }: { content: string }) {
             fontSize: '0.98rem',
             fontWeight: 600,
             color: '#a7f3d0',
-            marginTop: '1rem',
+            marginTop: '1.1rem',
             marginBottom: '0.4rem',
           }}
         >
@@ -219,18 +216,15 @@ function SpecDocRenderer({ content }: { content: string }) {
           key={index}
           style={{
             display: 'flex',
-            gap: '0.6rem',
-            marginBottom: '0.5rem',
-            background: 'rgba(255, 255, 255, 0.03)',
-            padding: '0.45rem 0.75rem',
-            borderRadius: '6px',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
+            gap: '0.5rem',
+            marginBottom: '0.55rem',
+            lineHeight: '1.65',
           }}
         >
-          <span style={{ fontWeight: 700, color: '#818cf8', minWidth: '1.2rem' }}>
+          <span style={{ fontWeight: 700, color: '#818cf8', minWidth: '1.25rem' }}>
             {numMatch ? numMatch[0] : ''}
           </span>
-          <span style={{ color: '#e2e8f0' }}>{formatInline(text)}</span>
+          <span style={{ color: '#cbd5e1' }}>{formatInline(text)}</span>
         </div>
       );
       return;
@@ -238,7 +232,7 @@ function SpecDocRenderer({ content }: { content: string }) {
 
     flushList(`${index}`);
     elements.push(
-      <p key={index} style={{ marginBottom: '0.75rem', color: '#cbd5e1', lineHeight: '1.65' }}>
+      <p key={index} style={{ marginBottom: '0.65rem', color: '#cbd5e1', lineHeight: '1.65' }}>
         {formatInline(trimmed)}
       </p>
     );
@@ -246,7 +240,7 @@ function SpecDocRenderer({ content }: { content: string }) {
 
   flushList('final');
 
-  return <div>{elements}</div>;
+  return <div style={{ color: '#cbd5e1', fontSize: '0.92rem', lineHeight: '1.7' }}>{elements}</div>;
 }
 
 export function AppPortfolioModal({
@@ -258,7 +252,6 @@ export function AppPortfolioModal({
   onDeleteApp,
   onBacklogChange,
 }: AppPortfolioModalProps) {
-  // Merge overview, specs, backlog into 'details' tab
   const [activeTab, setActiveTab] = useState<'details' | 'settings'>(
     initialTab === 'settings' ? 'settings' : 'details'
   );
@@ -272,24 +265,20 @@ export function AppPortfolioModal({
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccessMessage, setSaveSuccessMessage] = useState('');
 
-  // Sync state when app changes
   useEffect(() => {
     setFormData({ ...app });
   }, [app]);
 
-  // Favicon handling
   const candidates = useMemo(() => getFaviconCandidates(app.frontendUrl, app.id), [app.frontendUrl, app.id]);
   const [candidateIndex, setCandidateIndex] = useState(0);
   const initials = getAppInitials(app.title);
   const bgGradient = getAppGradient(app.title + app.id);
   const currentSrc = candidateIndex < candidates.length ? candidates[candidateIndex] : null;
 
-  // Backlog counts
   const backlog = app.backlog || [];
   const completedCount = backlog.filter((b) => b.isCompleted).length;
   const progressPercent = backlog.length > 0 ? Math.round((completedCount / backlog.length) * 100) : 0;
 
-  // Manual Health Check for this single app
   const handleCheckHealth = async () => {
     if (!app.frontendUrl) return;
     setIsCheckingHealth(true);
@@ -333,7 +322,6 @@ export function AppPortfolioModal({
     }
   };
 
-  // Toggle Manual Check (Admin only)
   const handleToggleManualCheck = async () => {
     if (!canEdit) return;
     const nextChecked = !app.manualChecked;
@@ -362,7 +350,6 @@ export function AppPortfolioModal({
     }
   };
 
-  // Toggle Backlog item completion
   const handleToggleBacklog = async (item: BacklogItem) => {
     if (!canEdit) return;
     const nextCompleted = !item.isCompleted;
@@ -381,7 +368,6 @@ export function AppPortfolioModal({
     }
   };
 
-  // Add Backlog Item
   const handleAddBacklog = async () => {
     if (!canEdit || !newBacklogTitle.trim()) return;
     const newItem: BacklogItem = {
@@ -401,7 +387,6 @@ export function AppPortfolioModal({
     }
   };
 
-  // Delete Backlog Item
   const handleDeleteBacklog = async (itemId: string) => {
     if (!canEdit) return;
     const nextBacklog = backlog.filter((b) => b.id !== itemId);
@@ -413,7 +398,6 @@ export function AppPortfolioModal({
     }
   };
 
-  // Save Settings Form
   const handleSaveForm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canEdit || !formData.title?.trim()) return;
@@ -606,7 +590,7 @@ export function AppPortfolioModal({
           </div>
         </div>
 
-        {/* Simplified Navigation Bar: 2 Tabs (Merged Details & Admin Settings) */}
+        {/* Simplified Navigation Bar: 2 Tabs */}
         <div className="portfolio-nav-bar">
           <div className="portfolio-tabs-list">
             <button
@@ -640,265 +624,256 @@ export function AppPortfolioModal({
           </div>
         </div>
 
-        {/* Modal Scrollable Body */}
-        <div className="portfolio-body">
+        {/* Modal Scrollable Body - Clean Minimalist Layout without redundant nested boxes */}
+        <div className="portfolio-body" style={{ padding: '1.5rem 2rem' }}>
           {/* UNIFIED SINGLE TAB: OVERVIEW + ROADMAP/BACKLOG + SPECS */}
           {activeTab === 'details' && (
             <div className="portfolio-tab-content">
-              <div className="portfolio-grid-layout">
-                {/* 1. SECTION: HERO OVERVIEW & SYSTEM INFO */}
-                <div className="portfolio-overview-hero-card">
-                  <div className="portfolio-overview-split">
-                    {/* Left: Description & Quick Actions */}
-                    <div className="portfolio-desc-block">
-                      <h3 className="portfolio-card-title">
-                        <span>📖</span> Mô Tả & Giới Thiệu
-                      </h3>
-                      <p className="portfolio-desc-text">
-                        {app.description || 'Chưa có mô tả chi tiết cho ứng dụng này.'}
-                      </p>
-
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.75rem' }}>
-                        {app.frontendUrl && (
-                          <a
-                            href={app.frontendUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="btn btn-primary"
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                          >
-                            <span>Truy cập Web App</span>
-                            <ExternalLinkIcon size={14} />
-                          </a>
-                        )}
-
-                        {canEdit && (
-                          <button
-                            type="button"
-                            className="btn btn-secondary"
-                            onClick={() => setActiveTab('settings')}
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                          >
-                            <EditIcon size={14} />
-                            <span>Chỉnh Sửa Thông Tin</span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Right: Clean Meta Information Grid */}
-                    <div className="portfolio-meta-grid">
-                      <div className="portfolio-meta-item">
-                        <span className="meta-label">Tác giả</span>
-                        <span className="meta-value">{app.author || 'johnnyhoang'}</span>
-                      </div>
-
-                      <div className="portfolio-meta-item">
-                        <span className="meta-label">Hosting</span>
-                        <span className="meta-value">{app.hosting || 'Vercel'}</span>
-                      </div>
-
-                      <div className="portfolio-meta-item">
-                        <span className="meta-label">Danh mục</span>
-                        <span className="meta-value">{app.category || 'Web App'}</span>
-                      </div>
-
-                      <div className="portfolio-meta-item">
-                        <span className="meta-label">Database</span>
-                        <span className="meta-value" style={{ color: '#38bdf8' }}>
-                          {app.database || 'Supabase'}
-                        </span>
-                      </div>
-
-                      <div className="portfolio-meta-item">
-                        <span className="meta-label">Trạng thái</span>
-                        <span className="meta-value">
-                          <span className="portfolio-status-pill">{app.status}</span>
-                        </span>
-                      </div>
-
-                      <div className="portfolio-meta-item">
-                        <span className="meta-label">Ưu tiên</span>
-                        <span className="meta-value">{app.priority || 'Medium'}</span>
-                      </div>
-
-                      {app.github && (
-                        <div className="portfolio-meta-item" style={{ gridColumn: 'span 2' }}>
-                          <span className="meta-label">GitHub Repo</span>
-                          <span className="meta-value">
-                            <a
-                              href={app.github}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                color: '#60a5fa',
-                                textDecoration: 'underline',
-                                fontSize: '0.82rem',
-                              }}
-                            >
-                              {app.github.replace('https://github.com/', '')} ↗
-                            </a>
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Architecture & Tech Notes */}
-                {app.techNotes && (
-                  <div className="portfolio-card">
-                    <h3 className="portfolio-card-title">
-                      <span>💡</span> Kiến Trúc & Ghi Chú Kỹ Thuật
+              {/* 1. SECTION: OVERVIEW & SYSTEM INFO (CLEAN, NO HEAVY BOXES) */}
+              <div style={{ marginBottom: '2rem' }}>
+                <div className="portfolio-overview-split">
+                  {/* Left: Description & Quick Actions */}
+                  <div className="portfolio-desc-block">
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc', margin: '0 0 0.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span>📖</span> Giới Thiệu Ứng Dụng
                     </h3>
-                    <div className="portfolio-tech-notes">
-                      <SpecDocRenderer content={app.techNotes} />
-                    </div>
-                  </div>
-                )}
+                    <p style={{ color: '#cbd5e1', fontSize: '0.92rem', lineHeight: 1.7, margin: 0 }}>
+                      {app.description || 'Chưa có mô tả chi tiết cho ứng dụng này.'}
+                    </p>
 
-                {/* 2. SECTION: ROADMAP & BACKLOG MANAGEMENT */}
-                <div className="portfolio-card">
-                  <div className="portfolio-card-header-row">
-                    <div>
-                      <h3 className="portfolio-card-title">
-                        <span>🚀</span> Lộ Trình & Tiến Độ Thực Hiện ({backlog.length} task)
-                      </h3>
-                      <p style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '0.2rem' }}>
-                        {canEdit
-                          ? 'Tick hoàn thành, thêm nhiệm vụ mới hoặc xóa task trực tiếp.'
-                          : 'Theo dõi tiến độ triển khai các tính năng.'}
-                      </p>
-                    </div>
-
-                    <div className="portfolio-progress-chip">
-                      <strong>{completedCount}</strong> / {backlog.length} task ({progressPercent}%)
-                    </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="portfolio-progress-bar-wrapper" style={{ margin: '0.85rem 0 1.25rem 0' }}>
-                    <div className="portfolio-progress-bar-track">
-                      <div
-                        className="portfolio-progress-bar-fill"
-                        style={{ width: `${progressPercent}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Add Task Input (Admin Only) */}
-                  {canEdit && (
-                    <div className="portfolio-add-task-row" style={{ marginBottom: '1rem' }}>
-                      <input
-                        type="text"
-                        className="input-text"
-                        placeholder="Nhập tên nhiệm vụ / tính năng mới cần làm..."
-                        value={newBacklogTitle}
-                        onChange={(e) => setNewBacklogTitle(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleAddBacklog()}
-                      />
-                      <button className="btn btn-primary" onClick={handleAddBacklog}>
-                        <PlusIcon size={16} />
-                        <span>Thêm Task</span>
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Task List */}
-                  {backlog.length === 0 ? (
-                    <div className="portfolio-empty-state" style={{ padding: '1.5rem 1rem' }}>
-                      <span>📝</span>
-                      <p>Dự án này hiện chưa có nhiệm vụ backlog nào.</p>
-                    </div>
-                  ) : (
-                    <div className="portfolio-backlog-full-list">
-                      {backlog.map((item) => (
-                        <div
-                          key={item.id}
-                          className={`portfolio-backlog-row ${item.isCompleted ? 'done' : ''}`}
-                          onClick={() => canEdit && handleToggleBacklog(item)}
-                          style={{ cursor: canEdit ? 'pointer' : 'default' }}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem', marginTop: '0.75rem' }}>
+                      {app.frontendUrl && (
+                        <a
+                          href={app.frontendUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="btn btn-primary"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
                         >
-                          <div className="backlog-row-left">
-                            <input
-                              type="checkbox"
-                              checked={item.isCompleted}
-                              onChange={() => canEdit && handleToggleBacklog(item)}
-                              disabled={!canEdit}
-                              style={{
-                                cursor: canEdit ? 'pointer' : 'default',
-                                width: '18px',
-                                height: '18px',
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                            <span className="backlog-row-title">{item.title}</span>
-                          </div>
+                          <span>Truy cập Web App</span>
+                          <ExternalLinkIcon size={14} />
+                        </a>
+                      )}
 
-                          {canEdit && (
-                            <button
-                              className="btn-icon-sm danger"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteBacklog(item.id);
-                              }}
-                              title="Xóa nhiệm vụ"
-                            >
-                              <TrashIcon size={14} />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* 3. SECTION: SRS SPECIFICATION DOCUMENT */}
-                <div className="portfolio-card">
-                  <div className="portfolio-spec-header" style={{ marginBottom: '1rem' }}>
-                    <div className="portfolio-spec-lang-btns">
-                      <button
-                        type="button"
-                        className={`btn ${specLang === 'vi' ? 'btn-primary' : 'btn-secondary'}`}
-                        onClick={() => setSpecLang('vi')}
-                      >
-                        🇻🇳 Đặc Tả Tiếng Việt
-                      </button>
-                      <button
-                        type="button"
-                        className={`btn ${specLang === 'en' ? 'btn-primary' : 'btn-secondary'}`}
-                        onClick={() => setSpecLang('en')}
-                      >
-                        🇬🇧 English Specification
-                      </button>
-                    </div>
-
-                    <div className="portfolio-spec-meta">
-                      <span className="portfolio-spec-date">
-                        📅 Cập nhật: {app.specUpdatedAt || '27/09/2026'}
-                      </span>
                       {canEdit && (
                         <button
-                          className="btn btn-secondary btn-sm"
+                          type="button"
+                          className="btn btn-secondary"
                           onClick={() => setActiveTab('settings')}
-                          title="Chỉnh sửa văn bản đặc tả trong phần cài đặt"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
                         >
                           <EditIcon size={14} />
-                          <span>Sửa Đặc Tả</span>
+                          <span>Chỉnh Sửa Thông Tin</span>
                         </button>
                       )}
                     </div>
                   </div>
 
-                  <div className="portfolio-spec-doc-container">
-                    <SpecDocRenderer
-                      content={
-                        specLang === 'en'
-                          ? app.specEn || 'No English specification available for this project.'
-                          : app.specVi || 'Chưa có đặc tả tiếng Việt cho dự án này.'
-                      }
+                  {/* Right: Clean Flat Meta Information List */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', padding: '1rem', borderRadius: '10px' }}>
+                    <div className="portfolio-meta-item">
+                      <span className="meta-label">Tác giả</span>
+                      <span className="meta-value">{app.author || 'johnnyhoang'}</span>
+                    </div>
+
+                    <div className="portfolio-meta-item">
+                      <span className="meta-label">Hosting</span>
+                      <span className="meta-value">{app.hosting || 'Vercel'}</span>
+                    </div>
+
+                    <div className="portfolio-meta-item">
+                      <span className="meta-label">Danh mục</span>
+                      <span className="meta-value">{app.category || 'Web App'}</span>
+                    </div>
+
+                    <div className="portfolio-meta-item">
+                      <span className="meta-label">Database</span>
+                      <span className="meta-value" style={{ color: '#38bdf8' }}>
+                        {app.database || 'Supabase'}
+                      </span>
+                    </div>
+
+                    <div className="portfolio-meta-item">
+                      <span className="meta-label">Trạng thái</span>
+                      <span className="meta-value">
+                        <span className="portfolio-status-pill">{app.status}</span>
+                      </span>
+                    </div>
+
+                    <div className="portfolio-meta-item">
+                      <span className="meta-label">Ưu tiên</span>
+                      <span className="meta-value">{app.priority || 'Medium'}</span>
+                    </div>
+
+                    {app.github && (
+                      <div className="portfolio-meta-item" style={{ gridColumn: 'span 2' }}>
+                        <span className="meta-label">GitHub Repo</span>
+                        <span className="meta-value">
+                          <a
+                            href={app.github}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              color: '#60a5fa',
+                              textDecoration: 'underline',
+                              fontSize: '0.82rem',
+                            }}
+                          >
+                            {app.github.replace('https://github.com/', '')} ↗
+                          </a>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Architecture & Tech Notes */}
+                {app.techNotes && (
+                  <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.06)' }}>
+                    <h4 style={{ fontSize: '0.98rem', fontWeight: 700, color: '#f8fafc', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <span>💡</span> Kiến Trúc & Ghi Chú Kỹ Thuật
+                    </h4>
+                    <SpecDocRenderer content={app.techNotes} />
+                  </div>
+                )}
+              </div>
+
+              {/* 2. SECTION: ROADMAP & BACKLOG (CLEAN SECTION DIVIDER) */}
+              <div style={{ marginBottom: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span>🚀</span> Lộ Trình & Tiến Độ Thực Hiện ({backlog.length} task)
+                    </h3>
+                  </div>
+
+                  <div className="portfolio-progress-chip">
+                    <strong>{completedCount}</strong> / {backlog.length} task ({progressPercent}%)
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="portfolio-progress-bar-wrapper" style={{ margin: '0.5rem 0 1rem 0' }}>
+                  <div className="portfolio-progress-bar-track">
+                    <div
+                      className="portfolio-progress-bar-fill"
+                      style={{ width: `${progressPercent}%` }}
                     />
                   </div>
+                </div>
+
+                {/* Add Task Input (Admin Only) */}
+                {canEdit && (
+                  <div className="portfolio-add-task-row" style={{ marginBottom: '0.85rem' }}>
+                    <input
+                      type="text"
+                      className="input-text"
+                      placeholder="Nhập tên nhiệm vụ / tính năng mới cần làm..."
+                      value={newBacklogTitle}
+                      onChange={(e) => setNewBacklogTitle(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && handleAddBacklog()}
+                    />
+                    <button className="btn btn-primary" onClick={handleAddBacklog}>
+                      <PlusIcon size={16} />
+                      <span>Thêm Task</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* Task List */}
+                {backlog.length === 0 ? (
+                  <p style={{ color: '#94a3b8', fontSize: '0.85rem', fontStyle: 'italic', margin: '0.5rem 0' }}>
+                    Dự án này hiện chưa có nhiệm vụ backlog nào.
+                  </p>
+                ) : (
+                  <div className="portfolio-backlog-full-list">
+                    {backlog.map((item) => (
+                      <div
+                        key={item.id}
+                        className={`portfolio-backlog-row ${item.isCompleted ? 'done' : ''}`}
+                        onClick={() => canEdit && handleToggleBacklog(item)}
+                        style={{ cursor: canEdit ? 'pointer' : 'default' }}
+                      >
+                        <div className="backlog-row-left">
+                          <input
+                            type="checkbox"
+                            checked={item.isCompleted}
+                            onChange={() => canEdit && handleToggleBacklog(item)}
+                            disabled={!canEdit}
+                            style={{
+                              cursor: canEdit ? 'pointer' : 'default',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          <span className="backlog-row-title">{item.title}</span>
+                        </div>
+
+                        {canEdit && (
+                          <button
+                            className="btn-icon-sm danger"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteBacklog(item.id);
+                            }}
+                            title="Xóa nhiệm vụ"
+                          >
+                            <TrashIcon size={14} />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 3. SECTION: SRS SPECIFICATION (CLEAN DOCUMENT, ZERO NESTED BOXES) */}
+              <div style={{ paddingTop: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      className={`btn ${specLang === 'vi' ? 'btn-primary' : 'btn-secondary'}`}
+                      onClick={() => setSpecLang('vi')}
+                    >
+                      🇻🇳 Đặc Tả Tiếng Việt
+                    </button>
+                    <button
+                      type="button"
+                      className={`btn ${specLang === 'en' ? 'btn-primary' : 'btn-secondary'}`}
+                      onClick={() => setSpecLang('en')}
+                    >
+                      🇬🇧 English Specification
+                    </button>
+                  </div>
+
+                  <div className="portfolio-spec-meta">
+                    <span className="portfolio-spec-date">
+                      📅 Cập nhật: {app.specUpdatedAt || '27/09/2026'}
+                    </span>
+                    {canEdit && (
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => setActiveTab('settings')}
+                        title="Chỉnh sửa văn bản đặc tả trong phần cài đặt"
+                      >
+                        <EditIcon size={14} />
+                        <span>Sửa Đặc Tả</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Flat Spec Renderer directly without wrapper card */}
+                <div>
+                  <SpecDocRenderer
+                    content={
+                      specLang === 'en'
+                        ? app.specEn || 'No English specification available for this project.'
+                        : app.specVi || 'Chưa có đặc tả tiếng Việt cho dự án này.'
+                    }
+                  />
                 </div>
               </div>
             </div>
@@ -908,8 +883,8 @@ export function AppPortfolioModal({
           {activeTab === 'settings' && canEdit && (
             <div className="portfolio-tab-content">
               <form onSubmit={handleSaveForm}>
-                <div className="portfolio-card">
-                  <h3 className="portfolio-card-title">
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc', marginBottom: '1rem' }}>
                     <span>⚙️</span> Cấu Hình & Quản Lý Toàn Diện Ứng Dụng
                   </h3>
 

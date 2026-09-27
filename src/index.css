@@ -3978,10 +3978,6 @@ header h1 svg {
 }
 
 .portfolio-spec-doc-container {
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 1.75rem;
   color: #cbd5e1;
   font-size: 0.92rem;
   line-height: 1.75;
