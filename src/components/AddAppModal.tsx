@@ -574,7 +574,7 @@ export function AddAppModal({
                       <input
                         type="text"
                         className="input-text"
-                        placeholder="VD: minkoi007cs/app_system hoặc https://github.com/minkoi007cs/app_system"
+                        placeholder="VD: johnnyhoang/app_system hoặc https://github.com/johnnyhoang/app_system"
                         value={githubInput}
                         onChange={(e) => setGithubInput(e.target.value)}
                         required

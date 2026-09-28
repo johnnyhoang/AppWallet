@@ -581,7 +581,7 @@ const { data: { publicUrl } } = supabase.storage
           <p className="note-desc">Khi nhiều Web App (JohnnyHoang's Wallet, Family, BETH...) dùng chung 1 Supabase Project, người dùng đăng nhập tại App A có thể bị nhảy nhầm về Site URL mặc định nếu không cấu hình <code>redirectTo</code> và Whitelist chính xác.</p>
 
           <h3>Nguyên Nhân Bị Fallback Nhầm App</h3>
-          <p>Mặc định trong Supabase Dashboard có một trường <strong>Site URL</strong> (ví dụ: <code>https://jwallet.minkoi.org</code>). Nếu App B (<code>https://family.minkoi.org</code>) gọi <code>signInWithOAuth()</code> mà không khai báo <code>redirectTo</code> hoặc URL của App B chưa nằm trong Whitelist, Supabase sẽ <strong>tự động fallback quay về Site URL mặc định</strong> (App A).</p>
+          <p>Mặc định trong Supabase Dashboard có một trường <strong>Site URL</strong> (ví dụ: <code>https://jwallet.minkoi.org</code>). Nếu App B (<code>https://jfamily.minkoi.org</code>) gọi <code>signInWithOAuth()</code> mà không khai báo <code>redirectTo</code> hoặc URL của App B chưa nằm trong Whitelist, Supabase sẽ <strong>tự động fallback quay về Site URL mặc định</strong> (App A).</p>
 
           <h3>Giải Pháp 1 — Whitelist Đủ Redirect URLs trong Supabase</h3>
           <Step n={1}>
@@ -593,14 +593,14 @@ const { data: { publicUrl } } = supabase.storage
           <Step n={3}>
             <p><strong>Redirect URLs (Whitelist):</strong> Thêm <em>TẤT CẢ</em> domain production + localhost của các sub-app. Dùng wildcard <code>**</code> để hỗ trợ mọi sub-route:</p>
             <CodeBlock lang="text" code={`https://jwallet.minkoi.org/**
-https://family.minkoi.org/**
-https://beth.minkoi.org/**
-https://ade.minkoi.org/**
-https://talent.minkoi.org/**
-https://collab.minkoi.org/**
-https://lnd.minkoi.org/**
-https://hub.minkoi.org/**
-https://shopee.minkoi.org/**
+https://jfamily.minkoi.org/**
+https://jbeth.minkoi.org/**
+https://jade.minkoi.org/**
+https://jtalent.minkoi.org/**
+https://jcollab.minkoi.org/**
+https://jlnd.minkoi.org/**
+https://jhub.minkoi.org/**
+https://jshopee.minkoi.org/**
 http://localhost:5173/**
 http://localhost:3000/**`} />
           </Step>
@@ -609,7 +609,7 @@ http://localhost:3000/**`} />
           <Alert type="info">Luôn truyền <code>window.location.origin</code> (hoặc đường dẫn callback cụ thể) khi gọi <code>signInWithOAuth</code>.</Alert>
           <CodeBlock lang="typescript" code={`// Trong từng app cụ thể (Vite / React / Next.js)
 async function handleLogin() {
-  const currentOrigin = window.location.origin; // e.g., "https://family.minkoi.org" hoặc "http://localhost:5173"
+  const currentOrigin = window.location.origin; // e.g., "https://jfamily.minkoi.org" hoặc "http://localhost:5173"
 
   await supabase.auth.signInWithOAuth({
     provider: 'google',
@@ -694,7 +694,7 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  'https://family.minkoi.org',
+  'https://jfamily.minkoi.org',
   'https://jwallet.minkoi.org'
 ];
 
